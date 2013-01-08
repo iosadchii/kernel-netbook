@@ -62,6 +62,8 @@ md5sums=('5323f3faadd051e83af605a63be5ea2e'
          '160a6054ceca92db60898852983a42d4'
          '1e06c9b7d92d61eab05e970116837144'
          '9d3c56a4b999c8bfbd4018089a62f662'
+         'ae5065b75bb9999a4677f95b20c1e688'
+         '9453b89ec0b529aeb81ed2f6a87faf85'
          'a9c018cb0b9caa90f03ee90b71a2c457'
          'e58812b17465b90c25d550e269788fec')
 #############################################
@@ -104,6 +106,8 @@ source=( #kernel sources and arch patchset
 	"license.patch"
 	"user-ioctl.patch"
 	"change-default-console-loglevel.patch"
+	"new_s2ram.patch"
+	"zram_crash_fix.patch"
 	"kernel-netbook.preset"
 	"config")
 	
@@ -112,6 +116,12 @@ build() {
   cd ${srcdir}/linux-$_basekernel
 
   # Patching Time:
+
+  # Fix zram, https://bugzilla.kernel.org/show_bug.cgi?id=50081#c11
+  patch -p1 -i "${srcdir}/zram_crash_fix.patch"
+
+  # Fix suspend to ram for Lenovo S10-3, https://bugzilla.kernel.org/show_bug.cgi?id=41932#c22
+  patch -p1 -i "${srcdir}/new_s2ram.patch"
 
   # minorversion patch:
   if [ ! ${_basekernel} = $pkgver ] ; then
